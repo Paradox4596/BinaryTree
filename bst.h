@@ -1,4 +1,32 @@
 #pragma once
+#include "binarytree.h"
+
+using namespace mytree;
+
+void BT_Test()
+{
+    BinaryTree myTree;
+
+    auto pRoot = myTree.GetRoot();
+    pRoot->mData = 1;
+
+    auto pNode = myTree.InsertLeft(pRoot, 2);
+    myTree.InsertLeft(pNode, 4);
+    myTree.InsertRight(pNode, 5);
+
+    pNode = myTree.InsertRight(pRoot, 3);
+    myTree.InsertLeft(pNode, 6);
+    myTree.InsertRight(pNode, 7);
+
+    myTree.BreadthFirstSearch();
+    std::cout << std::endl;
+
+    myTree.DepthFirstSearch();
+    std::cout << std::endl;
+
+    myTree.DFSRecursive(myTree.GetRoot());
+    std::cout << std::endl;
+}
 
 namespace mytree
 {
@@ -35,9 +63,51 @@ namespace mytree
 
         Node* GetRoot() { return mpRoot; }
 
-        Node* Insert(node* parent, int data)
+        Node* Insert(Node* parent, int data)
         {
-            // rules
+            // base case
+            if (parent == nullptr)
+            {
+                return CreateNode(data);
+            }
+
+            // recursive case
+            if (data < parent->mData)
+            {
+                parent->mpLeft = Insert(parent->mpLeft, data);
+            }
+            else if (data > parent->mData)
+            {
+                parent->mpRight = Insert(parent->mpRight, data);
+            }
+
+            return parent;
+        }
+
+    public:
+        void Visit(Node* node) { std::cout << node->mData << " "; }
+        void InOrder(Node* node)
+        {
+            if (node == nullptr) return;
+            InOrder(node->mpLeft);
+            Visit(node);
+            InOrder(node->mpRight);
         }
     };
+}
+
+void BSTTest()
+{
+    using namespace mytree;
+
+    BinarySearchTree bst;
+
+    auto root = bst.Insert(nullptr, 8);
+
+    bst.Insert(root, 3);
+    bst.Insert(root, 10);
+    bst.Insert(root, 1);
+    bst.Insert(root, 6);
+
+    bst.Insert(root);
 }
